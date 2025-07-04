@@ -5,8 +5,16 @@ import { createContext } from "react";
 export const AppContext = createContext()
 
 export const  AppContextProvider = (props)=>{
-        const value = {
 
+        const [searchFilter, setSearchFilter] = React.useState({
+                title:'',
+                location:''
+        });
+
+        const [isSearched,setIsSearched] = React.useState(false)
+        const value = {
+                        setSearchFilter,searchFilter,
+                        isSearched,setIsSearched
         }
 
         return(<AppContext.Provider value={value}>{props.children}</AppContext.Provider>)
