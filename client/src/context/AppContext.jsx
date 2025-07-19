@@ -21,13 +21,16 @@ export const  AppContextProvider = (props)=>{
                 setJobs(jobsData);
         }
 
+        const [showRecruiterLogin,setShowRecruiterLogin] = React.useState(false);
+
         useEffect(()=>{
                 fetchJobs()
         },[])
         const value = {
                         setSearchFilter,searchFilter,
                         isSearched,setIsSearched,
-                        jobs,setJobs
+                        jobs,setJobs,
+                        showRecruiterLogin,setShowRecruiterLogin
         }
 
         return(<AppContext.Provider value={value}>{props.children}</AppContext.Provider>)
