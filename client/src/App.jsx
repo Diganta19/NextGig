@@ -7,6 +7,11 @@ import Applications from "./pages/Applications"
 import ApplyJobs from "./pages/ApplyJobs"
 import RecruiterLogin from './components/RecruiterLogin';
 import { AppContext } from './context/AppContext';
+import Dashboard from './pages/Dashboard';
+import ManageJobs from './pages/ManageJobs';
+import ViewApplications from './pages/ViewApplications'
+import AddJob from './pages/AddJob'
+import "quill/dist/quill.snow.css"
 
 function App() {
 
@@ -21,6 +26,11 @@ function App() {
           <Route path="/" element={<Home />}/>
            <Route path="/apply-job/:id" element={<ApplyJobs />}/>
             <Route path="/applications" element={<Applications />}/>
+             <Route path="/dashboard" element={<Dashboard />}>
+                <Route path="add-job" element={<AddJob />}/>
+                <Route path="manage-jobs" element={<ManageJobs />}/>
+                <Route path="view-applications" element={<ViewApplications />}/>
+               </Route>
         </Routes>
       </div>
       
