@@ -5,14 +5,17 @@ import "dotenv/config";
 import connectDB from './config/db.js';
 import * as Sentry from "@sentry/node";
 import {clerkWebhooks} from "./controllers/webhooks.js"
-import bodyParser from 'body-parser'    
+import bodyParser from 'body-parser' 
+import companyRouter from "./routes/companyRoutes.js";   
+import connectCloudinary from './config/cloudinary.js';
 
 //Initialize Express
 const app = express()
 //Connect to DB
 
 async function startServer() {
-    await connectDB()
+    await connectDB();
+    await connectCloudinary();
 
 
 //Middlewares
@@ -25,7 +28,7 @@ app.get('/debug-sentry',function mainHandler(req,res){
     throw new Error("Sentry Error");
 })
 app.post("/webhooks",bodyParser.raw({type:'application/json'}),clerkWebhooks)
-
+app.use("/api/company",companyRouter);
 
 
 
