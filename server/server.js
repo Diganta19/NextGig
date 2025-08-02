@@ -5,11 +5,15 @@ import "dotenv/config";
 import connectDB from './config/db.js';
 import * as Sentry from "@sentry/node";
 import {clerkWebhooks} from "./controllers/webhooks.js"
+import bodyParser from 'body-parser'    
 
 //Initialize Express
 const app = express()
 //Connect to DB
-await connectDB()
+
+async function startServer() {
+    await connectDB()
+
 
 //Middlewares
 app.use(cors());
@@ -20,7 +24,7 @@ app.get("/",(req,res)=>res.send('API Working'));
 app.get('/debug-sentry',function mainHandler(req,res){
     throw new Error("Sentry Error");
 })
-app.post("/webhooks",clerkWebhooks)
+app.post("/webhooks",bodyParser.raw({type:'application/json'}),clerkWebhooks)
 
 
 
@@ -34,3 +38,5 @@ app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
     
 })
+}
+startServer()
