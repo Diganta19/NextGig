@@ -8,6 +8,7 @@ import {clerkWebhooks} from "./controllers/webhooks.js"
 import bodyParser from 'body-parser' 
 import companyRouter from "./routes/companyRoutes.js";   
 import connectCloudinary from './config/cloudinary.js';
+import jobRoutes from '../server/routes/jobRoutes.js'
 
 //Initialize Express
 const app = express()
@@ -29,6 +30,7 @@ app.get('/debug-sentry',function mainHandler(req,res){
 })
 app.post("/webhooks",bodyParser.raw({type:'application/json'}),clerkWebhooks)
 app.use("/api/company",companyRouter);
+app.use("/api/jobs",jobRoutes);
 
 
 
