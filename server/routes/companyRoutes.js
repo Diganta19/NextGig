@@ -28,6 +28,6 @@ router.post('/change-status',protectCompany,ChangeJobApplicationStatus);
 
 
 //Change Application Visibility
-router.post('change-visibility',protectCompany,changeVisibility);
+router.post('/change-visibility',protectCompany,changeVisibility);
 
 export default router;
