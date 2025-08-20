@@ -9,6 +9,10 @@ import bodyParser from 'body-parser'
 import companyRouter from "./routes/companyRoutes.js";   
 import connectCloudinary from './config/cloudinary.js';
 import jobRoutes from '../server/routes/jobRoutes.js'
+import userRoutes from "../server/routes/userRoutes.js"
+import {clerkMiddleware} from "@clerk/express"
+
+
 
 //Initialize Express
 const app = express()
@@ -22,6 +26,7 @@ async function startServer() {
 //Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(clerkMiddleware()) 
 
 //Routes
 app.get("/",(req,res)=>res.send('API Working'));
@@ -31,6 +36,7 @@ app.get('/debug-sentry',function mainHandler(req,res){
 app.post("/webhooks",bodyParser.raw({type:'application/json'}),clerkWebhooks)
 app.use("/api/company",companyRouter);
 app.use("/api/jobs",jobRoutes);
+app.use('/api/users',userRoutes);
 
 
 
