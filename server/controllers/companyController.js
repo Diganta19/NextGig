@@ -3,6 +3,7 @@ import Company from "../models/Company.js";
 import bcrypt from "bcrypt";
 import generateToken from '../utils/generateToken.js';
 import Job from '../models/Job.js';
+import JobApplication from "../models/JobApplication.js"
 
 //Register a new Company
 export const registerCompany = async (req,res)=>{
@@ -54,7 +55,7 @@ export const loginCompany = async (req,res) =>{
     try {
         const company = await Company.findOne({email});
 
-        if(bcrypt.compare(password, company.password)){
+        if(await bcrypt.compare(password, company.password)){
             res.json({
                 success:true,
                 company:{
@@ -126,7 +127,12 @@ export const getCompantPostedJobs = async(req,res)=>{
 
         const jobs = await Job.find({companyId})
 
-        res.json({success:true,jobsData:jobs})
+        const jobsData=await Promise.all(jobs.map(async(job)=>{
+            const applicants = await JobApplication.find({jobId: job._id});
+            return {...job.toObject(),applicants:applicants.length}
+        }))
+
+        res.json({success:true,jobsData})
     }catch(error){
         res.json({success:false,message:error.message})
     }
