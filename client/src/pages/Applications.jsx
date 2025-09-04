@@ -1,14 +1,45 @@
 /* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Navbar from "../components/Navbar"
 import { assets, jobsApplied } from '../assets/assets'
 import moment from "moment"
 import Footer from "../components/Footer"
+import { AppContext } from '../context/AppContext'
+import { useAuth, useUser } from '@clerk/clerk-react'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 const Applications = () => {
 
   const [isEdit,setIsEdit] = useState(false)
   const [resume,setResume] = useState(null)
+  const {backendUrl,userData,userApplications, fetchUserData} = useContext(AppContext); 
+  const {user} = useUser();
+  const {getToken} = useAuth();
+
+  const updateResume = async()=>{
+    try {
+      const formData = new FormData();
+      formData.append('resume',resume);
+
+      const token = await getToken();
+
+      const {data} =  await axios.post(backendUrl+"/api/users/update-resume",formData,
+        {headers:{Authorization:`Bearer ${token}`}})
+
+        if(data.success){
+          await fetchUserData();
+          toast.success(data.message);
+        }else{
+          toast.error(data.message)
+        }
+    } catch (error) {
+      toast.error(error.message)
+    }
+
+    setIsEdit(false);
+    setResume(null)
+  }
 
   return (
     <>
@@ -17,13 +48,13 @@ const Applications = () => {
       <h2 className='text-xl font-semibold'>Your Resume</h2>
       <div className='gap-2 flex mt-3 mb-6'>
         {
-          isEdit ? <> 
+          isEdit ||userData && userData.resume=== ""  ? <> 
             <label className="flex items-center"htmlFor="resumeUpload">
-              <p className='bg-blue-100 text-blue-300 px-4 py-2 rounded-lg mr-2'>Select Resume</p>
+              <p className='bg-blue-100 text-blue-300 px-4 py-2 rounded-lg mr-2'>{resume ? resume.name : "Select Resume"}</p>
               <input id='resumeUpload' accept='application/pdf' type='file' hidden onChange={e => setResume(e.target.files[0])} />  
               <img src={assets.profile_upload_icon} alt="" />
             </label>
-            <button onClick={e => setIsEdit(false)}className='bg-green-100 border border-green-400 rounded-lg px-4 py-2'>Save</button>
+            <button onClick={updateResume}className='bg-green-100 border border-green-400 rounded-lg px-4 py-2'>Save</button>
            </> 
           :
            <div className='flex gap-2'>
@@ -44,11 +75,11 @@ const Applications = () => {
           </tr>
         </thead>
         <tbody>
-          {jobsApplied.map((job,index)=> true ? (
-            <tr>
-              <td className='py-3 px-4 flex items-center gap-2 border-b'><img  className="w-8 h-8"src={job.logo}/>{job.company}</td>
-              <td className='py-3 px-4 text-left'>{job.title}</td>
-              <td className='py-3 px-4 text-left max-sm:hidden'>{job.location}</td>
+          {userApplications.map((job,index)=> true ? (
+            <tr key={index}>
+              <td className='py-3 px-4 flex items-center gap-2 border-b'><img  className="w-8 h-8"src={job.companyId.image}/>{job.companyId.name}</td>
+              <td className='py-3 px-4 text-left'>{job.jobId.title}</td>
+              <td className='py-3 px-4 text-left max-sm:hidden'>{job.jobId.location}</td>
               <td className='py-3 px-4 text-left  max-sm:hidden'>{moment(job.date).format("ll")}</td>
               <td className='py-3 px-4 text-left'><span className={`${job.status === 'Accepted' ? 'bg-green-100' : job.status === 'Rejected' ? 'bg-red-100' : 'bg-blue-100'} px-4 py-1.5 rounded`}>{job.status}</span></td>
             </tr>
