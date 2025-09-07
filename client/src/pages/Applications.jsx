@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-constant-condition */
 /* eslint-disable no-unused-vars */
 import React, { useContext, useState } from 'react'
@@ -9,11 +10,12 @@ import { AppContext } from '../context/AppContext'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { useEffect } from 'react'
 const Applications = () => {
 
   const [isEdit,setIsEdit] = useState(false)
   const [resume,setResume] = useState(null)
-  const {backendUrl,userData,userApplications, fetchUserData} = useContext(AppContext); 
+  const {backendUrl,userData,userApplications, fetchUserData, fetchUserApplications  } = useContext(AppContext); 
   const {user} = useUser();
   const {getToken} = useAuth();
 
@@ -41,6 +43,12 @@ const Applications = () => {
     setResume(null)
   }
 
+  useEffect(()=>{
+    if(user){
+      fetchUserApplications()
+    }
+  },[user])
+
   return (
     <>
      <Navbar /> 
@@ -58,7 +66,7 @@ const Applications = () => {
            </> 
           :
            <div className='flex gap-2'>
-            <a href="" className='bg-blue-100 text-blue-600 px-4 py-2 rounded-lg'>Resume</a>
+            <a href={userData.resume} target= '_blank' className='bg-blue-100 text-blue-600 px-4 py-2 rounded-lg'>Resume</a>
             <button onClick={()=>setIsEdit(true)}className='text-gray-600 border border-gray-300 rounded-lg px-4 py-2'>Edit</button>
            </div>
         }
