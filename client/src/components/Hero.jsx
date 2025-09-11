@@ -23,7 +23,7 @@ const Hero = () => {
     }
   return (
     <div className='container 2xl:px-20 my-10 mx-auto '>
-      <div className='bg-gradient-to-r from-purple-800 to-purple-950 text-white mx-2 rounded-xl text-center'>
+      <div className='bg-gradient-to-r from-purple-800 to-purple-950 text-white mx-2 rounded-xl py-16 text-center'>
         <h2 className='text-2xl md:text-3xl lg:text-4xl font-medium mb-4'>Over 1000+ Jobs To Apply Here For You</h2>
         <p className='max-w-xl mb-8 mx-auto text-sm font-light px-5 '>Land Your Dream Job Here - Start Right Now</p>
         <div className='flex item-center justify-between bg-white rounded text-grey-600 max-w-xl pl-4 mx-4 sm:mx-auto '>
