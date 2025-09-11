@@ -1,3 +1,4 @@
+
 import express from 'express';
 import './config/instrument.js'
 import cors from "cors";
@@ -8,9 +9,10 @@ import {clerkWebhooks} from "./controllers/webhooks.js"
 import bodyParser from 'body-parser' 
 import companyRouter from "./routes/companyRoutes.js";   
 import connectCloudinary from './config/cloudinary.js';
-import jobRoutes from '../server/routes/jobRoutes.js'
-import userRoutes from "../server/routes/userRoutes.js"
+import jobRoutes from './routes/jobRoutes.js'
+import userRoutes from "./routes/userRoutes.js"
 import {clerkMiddleware} from "@clerk/express"
+import serverless from 'serverless-http'; 
 
 
 
@@ -18,7 +20,7 @@ import {clerkMiddleware} from "@clerk/express"
 const app = express()
 //Connect to DB
 
-async function startServer() {
+ async function startServer() {
     await connectDB();
     await connectCloudinary();
 
@@ -39,15 +41,16 @@ app.use("/api/jobs",jobRoutes);
 app.use('/api/users',userRoutes);
 
 
-
+Sentry.setupExpressErrorHandler(app);
 
 //Port
 const PORT = process.env.PORT || 5000;
+ 
 
-Sentry.setupExpressErrorHandler(app);
+
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
     
 })
-}
+ }
 startServer()

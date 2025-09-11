@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Company from "../models/Company.js"
+
 
 const jobSchema = new mongoose.Schema({
     title: {type:String, required:true},
